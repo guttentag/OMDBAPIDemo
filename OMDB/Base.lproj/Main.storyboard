@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Search View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="SearchViewController" customModule="OMDB" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -16,8 +21,66 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qv4-OF-s5i">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="hJz-Ay-5GW"/>
+                                </constraints>
+                                <items>
+                                    <navigationItem title="OMDB API" id="RYp-eO-50K"/>
+                                </items>
+                            </navigationBar>
+                            <searchBar contentMode="redraw" text="" translatesAutoresizingMaskIntoConstraints="NO" id="arQ-cM-gzv">
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fNf-DD-7aR">
+                                <rect key="frame" x="0.0" y="113" width="375" height="549"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LoadinCellIdentifier" id="dF0-6v-2s7">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dF0-6v-2s7" id="ZTn-jA-eey">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="erB-4K-RpB">
+                                                    <rect key="frame" x="165.5" y="-1" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="erB-4K-RpB" secondAttribute="height" multiplier="1:1" id="bGr-IL-Lyv"/>
+                                                    </constraints>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="erB-4K-RpB" firstAttribute="height" secondItem="ZTn-jA-eey" secondAttribute="height" id="4U3-WH-tev"/>
+                                                <constraint firstItem="erB-4K-RpB" firstAttribute="centerY" secondItem="ZTn-jA-eey" secondAttribute="centerY" id="qdf-yH-yJX"/>
+                                                <constraint firstItem="erB-4K-RpB" firstAttribute="centerX" secondItem="ZTn-jA-eey" secondAttribute="centerX" id="xxd-pw-M2f"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fNf-DD-7aR" secondAttribute="bottom" constant="5" id="192-H5-Udp"/>
+                            <constraint firstItem="arQ-cM-gzv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3vp-pI-KIe"/>
+                            <constraint firstItem="qv4-OF-s5i" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="4UQ-6L-EiS"/>
+                            <constraint firstItem="fNf-DD-7aR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KMs-MA-Czf"/>
+                            <constraint firstItem="qv4-OF-s5i" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="L6G-th-onY"/>
+                            <constraint firstItem="qv4-OF-s5i" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XYN-Cu-88W"/>
+                            <constraint firstItem="fNf-DD-7aR" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="eHk-fl-al1"/>
+                            <constraint firstItem="arQ-cM-gzv" firstAttribute="top" secondItem="qv4-OF-s5i" secondAttribute="bottom" id="r3k-1J-QNi"/>
+                            <constraint firstItem="arQ-cM-gzv" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="ur0-R4-IzA"/>
+                            <constraint firstItem="fNf-DD-7aR" firstAttribute="top" secondItem="arQ-cM-gzv" secondAttribute="bottom" constant="5" id="yaF-8Q-fAa"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="searchBar" destination="arQ-cM-gzv" id="lJX-2g-DfK"/>
+                        <outlet property="tableView" destination="fNf-DD-7aR" id="dcD-AM-OLM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
