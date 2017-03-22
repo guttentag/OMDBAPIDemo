@@ -8,9 +8,7 @@
 
 import UIKit
 import Kingfisher
-//TODO remote delegate to handle index and string
-// loading error
-//TODO image populate
+
 class SearchTableViewDataSource: NSObject, UITableViewDataSource {
   let itemCellDequeIdentifier = "itemCellViewIdentifier"
   let pageSize: Int = 10
@@ -39,7 +37,6 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    print("paging alamo \(nextPageAvailable) \(currentLoadedIndex) \(maxNumberOfPages)")
     return nextPageAvailable ? data.count + 1 : data.count
   }
   
@@ -48,19 +45,10 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
       // regular data cell
       var cell = tableView.dequeueReusableCell(withIdentifier: self.itemCellDequeIdentifier)
       if cell == nil {
-        cell = UITableViewCell(style: .subtitle, reuseIdentifier: self.itemCellDequeIdentifier)
-        cell?.textLabel?.numberOfLines = 3
-        cell?.textLabel?.lineBreakMode = .byTruncatingTail
-        cell?.imageView?.contentMode = .scaleAspectFit
+        cell = generateNewCell()
       }
       let dataItem = self.data[indexPath.row]
-      cell!.textLabel?.text = dataItem.itemTitle
-      cell!.detailTextLabel?.text = dataItem.itemYear.description
-      if let imageUrl = dataItem.posterUrl {
-//        cell!.imageView?.kf.setImage(with: imageUrl)
-        cell!.imageView?.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder_v"), options: nil, progressBlock: nil, completionHandler: nil)
-      }
-      return cell!
+      return populateCellWithData(cell: cell!, data: dataItem)
     } else {
       // loading indicator cell:
       let cell = tableView.dequeueReusableCell(withIdentifier: "LoadinCellIdentifier", for: indexPath)
@@ -71,8 +59,24 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
     }
   }
   
+  func populateCellWithData(cell: UITableViewCell, data: OMDBItem) -> UITableViewCell {
+    cell.textLabel?.text = data.itemTitle
+    cell.detailTextLabel?.text = data.itemYear.description
+    if let imageUrl = data.posterUrl {
+      cell.imageView?.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder_v"), options: nil, progressBlock: nil, completionHandler: nil)
+    }
+    return cell
+  }
+  
+  func generateNewCell() -> UITableViewCell{
+    let cell = UITableViewCell(style: .subtitle, reuseIdentifier: self.itemCellDequeIdentifier)
+    cell.textLabel?.numberOfLines = 3
+    cell.textLabel?.lineBreakMode = .byTruncatingTail
+    cell.imageView?.contentMode = .scaleAspectFit
+    return cell
+  }
+  
   func loadNewDataFor(_ searchString: String) {
-    // TODO fetch new data
     self.currentLoadedIndex = 1
     self.maxNumberOfPages = 0
     self.data.removeAll()
@@ -98,8 +102,7 @@ extension SearchTableViewDataSource: SearchResponseDelegate {
   }
   
   func failureForPaging(index: Int, error: Error) {
-    //TODO alert view controller
-//    let alertController = UIAlertController(title: "Network Error", message: "Please Try Again When Connection is Available", preferredStyle: .actionSheet)
+    searchInteractionDelegate?.displayError("Search Error, plese check your connectivity.\n Message: \(error.localizedDescription)")
   }
 }
 

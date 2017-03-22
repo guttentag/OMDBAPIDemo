@@ -51,7 +51,6 @@ class DetailViewController: UIViewController {
   }
   
   func moreButtonClicked(_ sender: Any?) {
-    // TODO deep link
     var schemeUrl: URL!
     var browserUrl: URL!
     if let id = imdbId {

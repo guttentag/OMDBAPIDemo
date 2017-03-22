@@ -25,13 +25,8 @@ class SearchViewController: UIViewController {
     tableView.dataSource = searchTableDataSource
     tableView.delegate = searchTableDataSource
   }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
 }
-//TODO empty search string
+
 extension SearchViewController: UISearchBarDelegate {
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     searchBar.resignFirstResponder()
