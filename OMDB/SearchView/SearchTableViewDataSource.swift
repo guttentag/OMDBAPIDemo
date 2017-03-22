@@ -19,6 +19,7 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
   var maxNumberOfPages = 0
   var tableView: UITableView?
   var currentQueryString: String?
+  var searchInteractionDelegate: SearchInteractionDelegate?
   
   var nextPageAvailable: Bool {
     get {
@@ -26,8 +27,9 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
     }
   }
   
-  init(table: UITableView) {
+  init(table: UITableView, eventDelegate: SearchInteractionDelegate) {
     super.init()
+    self.searchInteractionDelegate = eventDelegate
     self.tableView = table
     self.tableView!.rowHeight = 80
   }
@@ -49,16 +51,14 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
         cell = UITableViewCell(style: .subtitle, reuseIdentifier: self.itemCellDequeIdentifier)
         cell?.textLabel?.numberOfLines = 3
         cell?.textLabel?.lineBreakMode = .byTruncatingTail
+        cell?.imageView?.contentMode = .scaleAspectFit
       }
       let dataItem = self.data[indexPath.row]
       cell!.textLabel?.text = dataItem.itemTitle
       cell!.detailTextLabel?.text = dataItem.itemYear.description
       if let imageUrl = dataItem.posterUrl {
 //        cell!.imageView?.kf.setImage(with: imageUrl)
-        cell!.imageView?.kf.setImage(with: imageUrl)
-      } else {
-        
-        //TODO placeholder
+        cell!.imageView?.kf.setImage(with: imageUrl, placeholder: UIImage(named: "placeholder_v"), options: nil, progressBlock: nil, completionHandler: nil)
       }
       return cell!
     } else {
@@ -82,6 +82,12 @@ class SearchTableViewDataSource: NSObject, UITableViewDataSource {
   }
 }
 
+extension SearchTableViewDataSource: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    searchInteractionDelegate?.showItemDetails(data[indexPath.row])
+    tableView.deselectRow(at: indexPath, animated: true)
+  }
+}
 
 extension SearchTableViewDataSource: SearchResponseDelegate {
   func succesForPaging(index: Int, response: RemoteLoader.SearchRepsponse) {
@@ -94,7 +100,6 @@ extension SearchTableViewDataSource: SearchResponseDelegate {
   func failureForPaging(index: Int, error: Error) {
     //TODO alert view controller
 //    let alertController = UIAlertController(title: "Network Error", message: "Please Try Again When Connection is Available", preferredStyle: .actionSheet)
-    
   }
 }
 

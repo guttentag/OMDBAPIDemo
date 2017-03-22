@@ -16,12 +16,14 @@ class SearchViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    navigationController?.navigationBar.topItem?.title = "OMDB API"
     searchBar.showsCancelButton = true
     searchBar.delegate = self
-    searchTableDataSource = SearchTableViewDataSource(table:self.tableView)
+    searchTableDataSource = SearchTableViewDataSource(table:self.tableView, eventDelegate: self)
     let uiButton = searchBar.value(forKey: "cancelButton") as! UIButton
     uiButton.setTitle("Go !", for: .normal)
     tableView.dataSource = searchTableDataSource
+    tableView.delegate = searchTableDataSource
   }
   
   override func didReceiveMemoryWarning() {
@@ -48,9 +50,24 @@ extension SearchViewController: UISearchBarDelegate {
   func searchFor(_ text: String) {
     let searchText = text.trimmingCharacters(in: .whitespacesAndNewlines)
     if searchText.characters.count < 3 {
-      //TODO alert
+      displayError("Search text must be at least 3 characters")
     } else {
       self.searchTableDataSource?.loadNewDataFor(searchText)
     }
+  }
+}
+extension SearchViewController: SearchInteractionDelegate {
+    func displayError(_ msg: String) {
+      let alertController = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+      let cancelAction = UIAlertAction(title: "Got It", style: .cancel, handler: nil)
+      alertController.addAction(cancelAction)
+      present(alertController, animated: true, completion: nil)
+    }
+  
+  func showItemDetails(_ item: OMDBItem) {
+    print("show \(item)")
+    let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+    vc.omdbItem = item
+    navigationController?.pushViewController(vc, animated: true)
   }
 }

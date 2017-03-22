@@ -11,7 +11,9 @@ import Alamofire
 
 class RemoteLoader {
   typealias SearchRepsponse = (totalResults: Int, searchResults: [OMDBItem])
+  typealias PlotResponse = (plot: String, imdbId: String)
   static let searchUrlStringFormat = "https://omdbapi.com/?s=%@&page=%d"
+  static let loadPlotStringFormat = "https://omdbapi.com/?i=%@&plot=full"
   
   static func searchWithIndex(queryString: String, pageIndex: Int, responseDelegate: SearchResponseDelegate) {
     let searchString = String(format: searchUrlStringFormat, queryString, pageIndex)
@@ -56,7 +58,29 @@ class RemoteLoader {
         }
         
       }
-      
     }
+  }
+  
+  static func loadPlot(_ item: OMDBItem, responseDelegate: PlotResponseDelegate) {
+    let encodedString = String(format: loadPlotStringFormat, item.itemId)
+    Alamofire.request(encodedString).responseJSON(completionHandler: {
+      (response) in
+      print("alamo plot \(response)")
+      if let error = response.result.error {
+        responseDelegate.error(error.localizedDescription)
+      } else {
+        let rawResponse = response.result.value as! Dictionary<String, String>
+        if let error = rawResponse["Error"] {
+          print("alamo plot error \(error)")
+          responseDelegate.error(error)
+        } else {
+          print("alamo plot success \(rawResponse)")
+          let imdb = rawResponse["imdbID"]!
+          let plot = rawResponse["Plot"]!
+          let response = PlotResponse(plot: plot, imdbId: imdb)
+          responseDelegate.success(response)
+        }
+      }
+    })
   }
 }
