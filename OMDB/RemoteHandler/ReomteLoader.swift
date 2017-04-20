@@ -61,14 +61,14 @@ class RemoteLoader {
           // network error:
           responseDelegate.error(error.localizedDescription)
         } else {
-          let rawResponse = response.result.value as! Dictionary<String, String>
-          if let error = rawResponse["Error"] {
+          let rawResponse = response.result.value as! NSDictionary
+          if let error = rawResponse["Error"] as? String {
             // could't find data:
             responseDelegate.error(error)
           } else {
             // found data:
-            let imdb = rawResponse["imdbID"]!
-            let plot = rawResponse["Plot"]!
+            let imdb = rawResponse["imdbID"] as! String
+            let plot = rawResponse["Plot"] as! String
             let response = PlotResponse(plot: plot, imdbId: imdb)
             responseDelegate.success(response)
           }
